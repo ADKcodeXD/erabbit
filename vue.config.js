@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  lintOnSave: false,
+  lintOnSave: true,
 
   pluginOptions: {
     'style-resources-loader': {

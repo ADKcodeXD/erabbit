@@ -34,7 +34,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-.main{
-    height: 720px;
-}
+
 </style>
