@@ -21,6 +21,7 @@ export default {
 
 <style scoped lang="less">
 .xtx-bread-item{
-    display: inline;
+    display: inline-block;
+    padding: 30px 0;
 }
 </style>

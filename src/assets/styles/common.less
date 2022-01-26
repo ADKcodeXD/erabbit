@@ -107,3 +107,19 @@
       }
     }
   }
+  .bread-fade-enter-from,
+  .bread-fade-leave-to {
+    transform: translateX(30px) rotateX(180deg);
+    opacity: 0;
+  }
+
+  .bread-fade-enter-active,
+  .bread-fade-leave-active {
+    transition: all 0.5s;
+  }
+
+  .bread-fade-enter-to,
+  .bread-fade-leave-from {
+    transform:none;
+    opacity: 1;
+  }

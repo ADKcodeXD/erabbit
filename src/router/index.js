@@ -23,17 +23,24 @@ const routes = [
     {
       path: '/category/sub/:id',
       component: () => import('@/views/category/sub')
-    }]
-  },
-  {
-    path: '/product/:id'
-
+    },
+    {
+      path: '/product/:id',
+      component: () => import('@/views/goods')
+    }
+    ]
   }
+
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  scrollBehavior () {
+    // Vue2.0
+    // return {x:0,y:0}
+    return { left: 0, top: 0 }
+  }
 })
 
 export default router
