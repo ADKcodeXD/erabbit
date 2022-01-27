@@ -30,16 +30,20 @@
       <!-- 商品推荐 -->
       <GoodsRelevant :goodsId="goods.id" />
       <!-- 商品详情 -->
+
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
           <goods-tabs></goods-tabs>
           <!-- 注意事项 -->
-          <div class="goods-warn"></div>
+          <div class="goods-warn">
+            <GoodsWarn/>
+          </div>
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside">
-
+            <GoodsHot/>
+            <GoodsHot :type="2"/>
         </div>
       </div>
     </div>
@@ -49,6 +53,7 @@
 <script>
   import {
     nextTick,
+    provide,
     watch
   } from '@vue/runtime-core'
   import {
@@ -67,6 +72,8 @@
   import GoodsName from './components/goods-name.vue'
   import GoodsSku from './components/goods-sku.vue'
   import GoodsTabs from './components/goods-tabs.vue';
+  import GoodsHot from './components/goods-hot.vue';
+  import GoodsWarn from './components/goods-warn.vue';
   export default {
     name: 'XtxGoodsPage',
     components: {
@@ -75,8 +82,9 @@
       GoodsSales,
       GoodsName,
       GoodsSku,
-      GoodsTabs
-
+      GoodsTabs,
+      GoodsHot,
+      GoodsWarn
     },
     setup() {
       // 1、获取商品详情
@@ -89,7 +97,8 @@
           goods.value.inventory = skuItem.inventory;
         }
       }
-
+      // 提供给后代使用的goods
+      provide('goods',goods)
       const num = ref(1)
       return {
         goods,
