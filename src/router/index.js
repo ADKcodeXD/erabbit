@@ -29,7 +29,15 @@ const routes = [
       component: () => import('@/views/goods')
     }
     ]
-  }
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login'),
+  },
+  {
+    path: '/login/callback',
+    component: () => import('@/views/login/callback'),
+  },
 
 ]
 
