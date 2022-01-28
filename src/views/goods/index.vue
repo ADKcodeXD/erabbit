@@ -24,7 +24,7 @@
           <xtx-numbox v-model="num" label="数量" :max="goods.inventory" :class="{disabled:goods.inventory===0}">
           </xtx-numbox>
           <!-- 按钮 -->
-          <xtx-button type="primary" style="margin-top:20px;">加入购物车</xtx-button>
+          <xtx-button type="primary" @click="insertCart" style="margin-top:20px;">加入购物车</xtx-button>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -37,13 +37,13 @@
           <goods-tabs></goods-tabs>
           <!-- 注意事项 -->
           <div class="goods-warn">
-            <GoodsWarn/>
+            <GoodsWarn />
           </div>
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside">
-            <GoodsHot/>
-            <GoodsHot :type="2"/>
+          <GoodsHot />
+          <GoodsHot :type="2" />
         </div>
       </div>
     </div>
@@ -98,8 +98,14 @@
         }
       }
       // 提供给后代使用的goods
-      provide('goods',goods)
+      provide('goods', goods)
       const num = ref(1)
+
+      // 加入购物车
+      const insertCart = () => {
+        // 返回字段skuId name attrsText picture price nowPrice  selected stock  count discount isCollect isEffective
+        
+      }
       return {
         goods,
         changeSku,
