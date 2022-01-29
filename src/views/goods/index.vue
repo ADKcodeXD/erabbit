@@ -74,6 +74,8 @@
   import GoodsTabs from './components/goods-tabs.vue';
   import GoodsHot from './components/goods-hot.vue';
   import GoodsWarn from './components/goods-warn.vue';
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
   export default {
     name: 'XtxGoodsPage',
     components: {
@@ -95,21 +97,51 @@
           goods.value.price = skuItem.price;
           goods.value.oldPrice = skuItem.oldPrice;
           goods.value.inventory = skuItem.inventory;
+          
         }
+        currSku.value=skuItem;
       }
       // 提供给后代使用的goods
       provide('goods', goods)
       const num = ref(1)
 
       // 加入购物车
+      const store =useStore();
+      const currSku=ref(null);
       const insertCart = () => {
-        // 返回字段skuId name attrsText picture price nowPrice  selected stock  count discount isCollect isEffective
-        
+        // 返回字段id skuId name attrsText picture price nowPrice  selected stock  count discount isCollect isEffective
+        console.log(currSku.value);
+        console.log(goods.value);
+        const {id:skuId,specsText:attrsText,inventory:stock}=currSku.value;
+        const {id,name,price,mainPictures}=goods.value
+        console.log(currSku.value);
+        if(currSku.value && currSku.value.id){
+          store.dispatch('cart/insertCart',{
+            id,
+            skuId,
+            name,
+            price,
+            nowPrice:price,
+            picture:mainPictures[0],
+            selected:true,
+            isEffective:true,
+            stock,
+            attrsText,
+            count:num.value
+          }).then(()=>{
+            Message({type:'success',text:'加入购物车成功'})
+          })
+          // 加入购物车成功
+          console.log(store.state.cart.list);
+        }else{
+          Message({type:'warn',text:'请选择规格'})
+        }
       }
       return {
         goods,
         changeSku,
-        num
+        num,
+        insertCart
       }
     }
   }

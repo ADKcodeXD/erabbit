@@ -22,6 +22,8 @@ export default {
     const change = () => {
       const newValue = !checked.value
       checked.value = newValue
+      emit('change',newValue);
+
     }
     return { checked, change }
   }

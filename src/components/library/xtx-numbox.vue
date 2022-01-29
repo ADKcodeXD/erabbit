@@ -4,7 +4,7 @@
     <div class="numbox">
       <a href="javascript:;" @click="changeNum(-1)">-</a>
       <input type="text" readonly :value="modelValue">
-      <a href="javascript:;" @click="changeNum(+1)">+</a>
+      <a href="javascript:;" @click="changeNum(1)">+</a>
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@ export default {
     //   绑定增减事件
     const count =useVModel(props,'modelValue',emit);
     const changeNum=(step)=>{
+      
         const newValue=count.value+step;
         if(newValue<props.min || newValue > props.max)return;
         count.value=newValue;
