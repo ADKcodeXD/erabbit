@@ -3,6 +3,8 @@ import {
   createWebHashHistory
 } from 'vue-router'
 
+import store from '@/store';
+
 const routes = [
   // {
   //   path: '/about',
@@ -31,7 +33,11 @@ const routes = [
     {
       path: '/cart',
       component: () => import('@/views/cart')
-    }
+    },
+    {
+      path: '/member/checkout',
+      component: () => import('@/views/member/pay/checkout'),
+    },
     ]
   },
   {
@@ -42,7 +48,7 @@ const routes = [
     path: '/login/callback',
     component: () => import('@/views/login/callback'),
   },
-
+  
 ]
 
 const router = createRouter({
@@ -54,5 +60,11 @@ const router = createRouter({
     return { left: 0, top: 0 }
   }
 })
-
+// 前置导航守卫
+router.beforeEach((to,from,next)=>{
+  const profile=store.state.user.profile
+  if(!profile.token && to.path.startsWith('/member')) 
+    return next('/login?redirectUrl='+encodeURIComponent(to.fullPath));
+  next();
+})
 export default router

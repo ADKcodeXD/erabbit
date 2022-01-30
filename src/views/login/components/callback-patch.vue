@@ -149,19 +149,11 @@ import { useRouter } from 'vue-router';
               nickname,
               token
             } = data.result;
-            store.commit('user/setUser', {
-              id,
-              account,
-              avatar,
-              mobile,
-              nickname,
-              token
+            store.commit('user/setUser',{id,account,avatar,mobile,nickname,token})
+            store.dispatch('cart/mergeCart').then(()=>{
+              Message({type:'success',text:'登录成功'})
+              router.push(route.query.redirectUrl||'/');
             })
-            Message({
-              type: 'success',
-              text: '登录成功'
-            })
-            router.push(store.state.user.redirectUrl||'/');
           }).catch(error => {
             if (error.response) {
               Message({

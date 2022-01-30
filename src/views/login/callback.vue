@@ -63,8 +63,11 @@ import Message from '@/components/library/Message';
                 userQQLogin({unionId:unionId.value}).then((data) => {
                     const {id,account,avatar,mobile,nickname,token}=data.result;
                     store.commit('user/setUser',{id,account,avatar,mobile,nickname,token});
-                    router.push(store.state.user.redirectUrl);
-                    Message({type:'success',text:'登录成功！'})
+                    store.dispatch('cart/mergeCart').then(()=>{
+                      Message({type:'success',text:'登录成功！'})
+                      router.push(store.state.user.redirectUrl);
+                    })
+                    
                 }).catch((err) => {
                     // 登录失败
                     isBind.value=false;

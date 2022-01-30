@@ -159,8 +159,10 @@
             // 成功后 
             const {id,account,avatar,mobile,nickname,token}=data.result;
             store.commit('user/setUser',{id,account,avatar,mobile,nickname,token})
-            proxy.$message({type:'success',text:'登录成功'})
-            router.push(route.query.redirectUrl||'/');
+            store.dispatch('cart/mergeCart').then(()=>{
+              proxy.$message({type:'success',text:'登录成功'})
+              router.push(route.query.redirectUrl||'/');
+            })
           }catch (error) {
             if(error.response){
               proxy.$message({type:'error',text:error.response.data.message||'登录失败'});

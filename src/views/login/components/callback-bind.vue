@@ -121,8 +121,10 @@ import { useStore } from 'vuex';
               }).then(data=>{
                     const {id,account,avatar,mobile,nickname,token}=data.result;
                     store.commit('user/setUser',{id,account,avatar,mobile,nickname,token})
-                    Message({type:'success',text:'登录成功'})
-                    router.push(store.state.user.redirectUrl);
+                    store.dispatch('cart/mergeCart').then(()=>{
+                      Message({type:'success',text:'登录成功'})
+                      router.push(route.query.redirectUrl||'/');
+                    })
               }).catch(error=>{
                   if(error.response){
                       Message({type:'error',text:error.response.data.message});

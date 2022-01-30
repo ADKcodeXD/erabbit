@@ -39,7 +39,8 @@
                   <div>
                     <p class="name ellipsis">{{goods.name}}</p>
                     <!-- 选择规格组件 -->
-                    <CartSku @change="$event=>updateCartSku(goods.skuId,$event)" :attrsText="goods.attrsText" :skuId="goods.skuId" />
+                    <CartSku @change="$event=>updateCartSku(goods.skuId,$event)" :attrsText="goods.attrsText"
+                      :skuId="goods.skuId" />
                   </div>
                 </div>
               </td>
@@ -110,7 +111,7 @@
         <div class="total">
           共 {{$store.getters['cart/validTotal']}} 件商品，已选择 {{$store.getters['cart/selectedListTotal']}} 件，商品合计：
           <span class="red">¥{{$store.getters['cart/selectedListAmount']}}</span>
-          <XtxButton type="primary">下单结算</XtxButton>
+          <XtxButton @click="checkOut" type="primary">下单结算</XtxButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
@@ -128,6 +129,7 @@
     useStore
   } from 'vuex'
   import Message from '@/components/library/Message';
+import router from '@/router';
   export default {
     name: 'XtxCartPage',
     components: {
@@ -186,17 +188,32 @@
         })
       }
 
-      const updateCartSku=(oldSkuId,newSku)=>{
-          store.dispatch('cart/updateCartSku',{oldSkuId,newSku});
-
+      const updateCartSku = (oldSkuId, newSku) => {
+        store.dispatch('cart/updateCartSku', {
+          oldSkuId,
+          newSku
+        });
+      }
+      // 结算登录按钮
+      const checkOut = () => {
+        // 1、判断是否选中商品
+        if (store.getters['cart/selectedList'].length === 0)
+          return Message({
+            text: '请至少勾选一件商品'
+        });
+        Confirm({text:'下单需要登录，请问是否跳转至登录页面？'}).then(()=>{
+          router.push('/member/checkout');
+        })
       }
       return {
         checkOne,
         checkAll,
+        checkOut,
         deleteCart,
         batchDeleteCart,
         updateCount,
-        updateCartSku
+        updateCartSku,
+        
       }
     }
   }

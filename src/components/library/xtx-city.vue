@@ -2,7 +2,7 @@
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{active:visiable}">
       <span class="placeholder" v-if="fullLocation">{{fullLocation}}</span>
-      <span class="placeholder" v-else>请选择配送地址</span>
+      <span class="placeholder" v-else>{{placeholder}}</span>
       <span class="value"></span>
       <i class="iconfont icon-angle-down"></i>
     </div>
@@ -33,6 +33,10 @@
       fullLocation: {
         type: String,
         default: ''
+      },
+      placeholder: {
+        type: String,
+        default: '请选择配送地址'
       }
     },
     setup(props, {
@@ -150,7 +154,7 @@
     display: inline-block;
     position: relative;
     z-index: 400;
-
+    
     .select {
       border: 1px solid #e4e4e4;
       height: 30px;
