@@ -7,11 +7,11 @@
         <li><span>联系方式：</span>{{showAddress.contact.replace(/^(\d{3})\d{4}(\d{4})/,'$1****$2')}}</li>
         <li><span>收货地址：</span>{{showAddress.fullLocation+showAddress.address}}</li>
       </ul>
-      <a href="javascript:;">修改地址</a>
+      <a href="javascript:;" @click="openAddressEdit(showAddress)">修改地址</a>
     </div>
     <div class="action">
       <XtxButton @click="openDialog" class="btn">切换地址</XtxButton>
-      <XtxButton @click="openAddressEdit" class="btn">添加地址</XtxButton>
+      <XtxButton @click="openAddressEdit(null)" class="btn">添加地址</XtxButton>
     </div>
     <xtx-dialog :title="'切换收货地址'" v-model:visiable="visiable">
       <div @click="selectedAddress=item" :class="{active:selectedAddress&&selectedAddress.id===item.id}"
@@ -93,16 +93,25 @@
 
       const addressEditCom = ref(null);
       //   打开添加编辑收货地址组件
-      const openAddressEdit = () => {
-        addressEditCom.value.open();
+      const openAddressEdit = (address) => {
+        addressEditCom.value.open(address);
       }
 
       // 组件添加地址
       const successHandler = (formData) => {
         // 深拷贝 
-        const jsonstr = JSON.stringify(formData);
+        const address = props.userAddressList.find(item => item.id === formData.id)
+        if (address) {
+          for (const key in address) {
+            address[key] = formData[key];
+          }
+        } else {
+          const jsonstr = JSON.stringify(formData);
 
-        props.userAddressList.unshift(JSON.parse(jsonstr));
+          props.userAddressList.unshift(JSON.parse(jsonstr));
+        }
+
+
       }
       return {
         showAddress,

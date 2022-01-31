@@ -55,23 +55,36 @@
     reactive,
     ref
   } from 'vue';
-import { addAddress } from '@/api/order';
-import Message from '@/components/library/Message';
+  import {
+    addAddress,updateAddress 
+  } from '@/api/order';
+  import Message from '@/components/library/Message';
   export default {
     components: {
       xtxDialog
     },
     name: 'AddressEdit',
-    setup(props,{emit}) {
+    setup(props, {
+      emit
+    }) {
       const dialogVisible = ref(false);
 
       //定义一个open函数 作为打开对话框的函数
-      const open = () => {
+      const open = (address) => {
         dialogVisible.value = true;
-        for(const key in formData){
-          formData[key]=null;
-          if(key==='isDefault') formData[key]=1;
+        if (address&&address.id) {
+          // 有id 是修改
+          for (const key in address) {
+            formData[key] = address[key];
+          }
+
+        } else {
+          for (const key in formData) {
+            formData[key] = null;
+            if (key === 'isDefault') formData[key] = 1;
+          }
         }
+
       }
 
       const formData = reactive({
@@ -84,23 +97,39 @@ import Message from '@/components/library/Message';
         postalCode: null,
         addressTags: null,
         isDefault: 1,
-        fullLocation:null
+        fullLocation: null
       })
 
-      const changeCity=(result)=>{
-        formData.cityCode=result.cityCode;
-        formData.provinceCode=result.provinceCode;
-        formData.countyCode=result.countyCode;
-        formData.fullLocation=result.fullLocation;
+      const changeCity = (result) => {
+        formData.cityCode = result.cityCode;
+        formData.provinceCode = result.provinceCode;
+        formData.countyCode = result.countyCode;
+        formData.fullLocation = result.fullLocation;
       }
       // 提交的函数
-      const submit=async ()=>{
+      const submit = async () => {
         //TODO 表单的校验等
-        const {data}=await addAddress(formData);
-        formData.id=data.result.id;
-        Message({type:'success',text:'添加成功'});
-        dialogVisible.value=false;
-        emit('on-success',formData);
+        if (formData.id) {
+          // 修改请求
+          await updateAddress (formData);
+          Message({
+            type: 'success',
+            text: '修改成功'
+          });
+          dialogVisible.value = false;
+          emit('on-success', formData);
+        } else {
+          const {
+            data
+          } = await addAddress(formData);
+          formData.id = data.result.id;
+          Message({
+            type: 'success',
+            text: '添加成功'
+          });
+          dialogVisible.value = false;
+          emit('on-success', formData);
+        }
       }
       return {
         dialogVisible,

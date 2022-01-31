@@ -82,7 +82,7 @@
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <XtxButton type="primary">提交订单</XtxButton>
+          <XtxButton @click="submitOrderFn" type="primary">提交订单</XtxButton>
         </div>
       </div>
     </div>
@@ -91,30 +91,71 @@
 <script>
   import checkoutAddress from './components/checkout-address.vue'
   import {
-    createOrder
+    createOrder,
+    submitOrder
   } from '@/api/order';
   import {
+    reactive,
     ref
   } from 'vue';
+import Message from '@/components/library/Message';
+import { useRouter } from 'vue-router';
   export default {
     components: {
       checkoutAddress
     },
     name: 'XtxPayCheckoutPage',
     setup() {
+      const router=useRouter();
       const orderInfo = ref(null);
       createOrder().then(data => {
+        
         orderInfo.value = data.result;
+        reqParams.goods=data.result.goods.map(({skuId,count})=>({skuId,count}))
+
+      }).catch(reason=>{
+        Message({type:'error',text:'读取订单错误 3秒内返回首页'});
+        setTimeout(()=>{
+          router.push('/')
+        },3000)
       })
 
-      const addressId = ref(null)
+      // 切换收货地址
       const changeAddress = (id) => {
-        addressId.value = id
+        reqParams.addressId = id
       }
-      
+      // 用于提交订单所需的参数
+      const reqParams = reactive({
+        addressId: null,
+        deliveryTimeType: 1,
+        payType: 1,
+        payChannel: 1,
+        buyerMessage:'',
+        goods:[]
+      });
+
+      // 提交
+      const submitOrderFn=async ()=>{
+        if(!reqParams.addressId){
+          Message({text:'请选择地址'})
+          return;
+        }
+        let data=await submitOrder(reqParams);
+        console.log(data);
+        // 提交成功之后
+        if(data.code==1){
+          Message({type:'success',text:'提交订单成功'});
+          // 跳转到提交成功的页面
+          router.push(`/member/pay?orderId=${data.result.id}`);
+        }else{
+          Message({type:'success',text:data.message});
+        }
+      }
       return {
         orderInfo,
-        changeAddress
+        changeAddress,
+        submitOrderFn,
+        reqParams
       }
     }
   }
