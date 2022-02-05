@@ -34,5 +34,13 @@ export const submitOrder = (reqParams) => {
  * @returns 
  */
 export const findOrderDetails = (orderId) => {
-    return request(`/member/order/${orderId}`, 'get');
-  }
+  return request(`/member/order/${orderId}`, 'get');
+}
+/**
+ * 获取我的订单  state为每个状态
+ * @param {*} reqParams 
+ * @returns 
+ */
+export const findMyOrder = ({page=1,pageSize=10,orderState=0}) => {
+  return request('/member/order', 'get', {page,pageSize,orderState});
+}
