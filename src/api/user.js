@@ -86,3 +86,23 @@ export const userQQPatchCode=(mobile)=>{
  export const userQQRegister=({unionId,account,mobile,code,password})=>{
     return request(`/login/social/${unionId}/complement`, 'post',{unionId,account,mobile,code,password})
 }
+
+
+/**
+ * /register/code 注册获取手机验证码
+ * @param {*} mobile 
+ * @returns 
+ */
+export const userRegisterCode=(mobile)=>{
+    return request(`/register/code?mobile=${mobile}`, 'get')
+}
+
+/**
+ * pc注册接口
+ * @param {*} param0 
+ * @returns 
+ */
+export const userRegister=({account,mobile,code,password})=>{
+    return request('/register', 'post',{account,mobile,code,password})
+}
+

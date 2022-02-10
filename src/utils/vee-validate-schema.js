@@ -49,5 +49,14 @@ export default {
   isAgree(value) {
     if (!value) return '请勾选同意用户协议'
     return true
+  },
+  async mobileApi(value){
+    // 服务器端发请求，校验是否唯一
+    if (!value) return '请输入手机号'
+    if (!/^1[3-9]\d{9}$/.test(value)) return '手机号格式错误'
+    // 服务端校验
+    const data = await userAccountOnly(value);
+    if (data.result.valid) return '该手机号已存在'
+    return true
   }
 }

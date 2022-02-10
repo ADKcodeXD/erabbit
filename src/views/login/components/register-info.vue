@@ -88,21 +88,17 @@ import { reactive, ref, onUnmounted } from "vue";
 import schema from "@/utils/vee-validate-schema";
 import Message from "@/components/library/Message";
 import { useIntervalFn } from "@vueuse/shared";
-import { userQQPatchCode, userQQRegister } from "@/api/user";
+import { userRegisterCode ,userRegister } from "@/api/user";
 import { useRouter } from "vue-router";
+import { useStore } from 'vuex';
 export default {
-  name: "CallbackPatch",
+  name: "RegisterInfo",
   components: {
     Form,
     Field,
   },
-  props: {
-    unionId: {
-      type: String,
-      default: "",
-    },
-  },
   setup(props) {
+    const store=useStore();
     const formCom = ref(null);
     // 表单校验
     const form = reactive({
@@ -115,12 +111,12 @@ export default {
     // yanzheng
     const mySchema = {
       account: schema.accountApi,
-      mobile: schema.mobile,
+      mobile: schema.mobileApi,
       code: schema.code,
       password: schema.password,
       rePassword: schema.rePassword,
     };
-    // send 短信验证码 byqqpatch--------------------------
+    // send 短信验证码 
     const time = ref(0);
     const { pause, resume, isActive } = useIntervalFn(
       () => {
@@ -132,15 +128,13 @@ export default {
       1000,
       false
     );
-
     // send 发送二维码函数
     const send = async () => {
       const valid = schema.mobile(form.mobile);
       if (valid === true) {
         if (time.value === 0) {
           // 校验通过 发送验证码
-          const data = await userQQPatchCode(form.mobile);
-          console.log(data);
+          const data = await userRegisterCode(form.mobile);
           Message({
             type: "success",
             text: "短信发送成功",
@@ -159,17 +153,19 @@ export default {
     // send 结束  ---------------------------------------
 
     // 提交信息------------------------------------------
+    
     const router = useRouter();
     const submit = () => {
       const valid = formCom.value.validate();
       if (valid) {
-        userQQRegister({
-          unionId: props.unionId,
-          ...form,
-        })
-          .then((data) => {
-            const { id, account, avatar, mobile, nickname, token } =
-              data.result;
+        userRegister({
+            mobile:form.mobile,
+            code:form.code,
+            password:form.password,
+            account:form.account
+        }).then((data) => {
+            const { id, account, avatar, mobile, nickname, token } = data.result;
+            
             store.commit("user/setUser", {
               id,
               account,
@@ -178,9 +174,11 @@ export default {
               nickname,
               token,
             });
+            console.log(123456);
             store.dispatch("cart/mergeCart").then(() => {
-              Message({ type: "success", text: "登录成功" });
-              router.push(route.query.redirectUrl || "/");
+              Message({ type: "success", text: "注册成功" });
+              console.log('注册成功');
+              router.push("/");
             });
           })
           .catch((error) => {

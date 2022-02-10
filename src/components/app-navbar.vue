@@ -10,7 +10,7 @@
           <li>
             <router-link href="javascript:;" to="/login">请先登录</router-link>
           </li>
-          <li><a href="javascript:;">免费注册</a></li>
+          <li><router-link to="/register" href="javascript:;">免费注册</router-link></li>
         </template>
         <li><a href="javascript:;">我的订单</a></li>
         <li><a href="javascript:;">会员中心</a></li>

@@ -80,6 +80,10 @@ const routes = [
     path: '/login/callback',
     component: () => import('@/views/login/callback'),
   },
+  {
+    path: '/register',
+    component: () => import('@/views/login/register'),
+  },
 
 ]
 
